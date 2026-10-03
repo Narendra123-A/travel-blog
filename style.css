@@ -1,0 +1,907 @@
+/* ============================================================
+   WanderWorld – Top 10 Travel Destinations
+   style.css | Author: WanderWorld Project
+   Description: Full styling for the WanderWorld travel blog.
+   Sections:
+     1. CSS Variables (Custom Properties)
+     2. Reset & Base Styles
+     3. Header & Navigation
+     4. Hero Section
+     5. Introduction Section
+     6. Destinations Section (CSS Grid cards)
+     7. Map Section
+     8. Travel Tips Section
+     9. Travel Checklist Section
+    10. Footer
+    11. Responsive Design (Media Queries)
+============================================================ */
+
+/* ============================================================
+   1. CSS VARIABLES
+   CSS variables (also called custom properties) let us define
+   values once and reuse them throughout the stylesheet.
+   This makes it easy to change colors / fonts in one place.
+============================================================ */
+:root {
+  /* Color Palette */
+  --primary:        #0077b6;    /* Ocean blue – main brand color */
+  --primary-dark:   #005f8e;    /* Darker blue for hover states */
+  --accent:         #f77f00;    /* Warm orange – for highlights */
+  --accent-dark:    #d46b00;    /* Darker orange for hover */
+  --text-dark:      #1a1a2e;    /* Very dark for headings */
+  --text-body:      #4a4a6a;    /* Medium dark for body text */
+  --text-light:     #ffffff;    /* White text */
+  --bg-page:        #f0f4f8;    /* Light grey-blue page background */
+  --bg-card:        #ffffff;    /* White for cards */
+  --border-light:   #e2e8f0;    /* Subtle border color */
+
+  /* Typography */
+  --font-heading:   'Playfair Display', Georgia, serif;
+  --font-body:      'Poppins', 'Segoe UI', sans-serif;
+
+  /* Spacing */
+  --section-padding: 90px 0;
+
+  /* Border Radius */
+  --radius-card:    18px;
+  --radius-btn:     50px;
+
+  /* Shadows */
+  --shadow-card:    0 6px 30px rgba(0, 0, 0, 0.10);
+  --shadow-hover:   0 16px 50px rgba(0, 119, 182, 0.22);
+}
+
+/* ============================================================
+   2. RESET & BASE STYLES
+   Remove default browser spacing and set sensible defaults.
+============================================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* padding/border included in element width */
+}
+
+html {
+  scroll-behavior: smooth; /* smooth scrolling when anchor links are clicked */
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-body);
+  background-color: var(--bg-page);
+}
+
+/* Remove default list bullets/numbers (we style them ourselves) */
+ul {
+  list-style: none;
+}
+
+/* Images should never overflow their container */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* All anchor tags: remove underline, inherit color */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ============================================================
+   REUSABLE UTILITIES
+============================================================ */
+
+/* Centered container with max width – used in every section */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Section header: centered title + subtitle used in multiple sections */
+.section-header {
+  text-align: center;
+  margin-bottom: 55px;
+}
+
+.section-header h2 {
+  font-family: var(--font-heading);
+  font-size: 2.4rem;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+}
+
+.section-header p {
+  font-size: 1.05rem;
+  color: var(--text-body);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   BUTTON STYLES
+   Two button variants:
+   - .btn-hero  : large white button on the hero section
+   - .btn-card  : smaller colored button on destination cards
+============================================================ */
+.btn {
+  display: inline-block;
+  padding: 14px 36px;
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.3s ease; /* smooth transition for hover effects */
+}
+
+/* Hero button: white text on transparent background with white border */
+.btn-hero {
+  background-color: var(--accent);
+  color: var(--text-light);
+  border: 2px solid var(--accent);
+  font-size: 1.1rem;
+  padding: 16px 44px;
+}
+
+.btn-hero:hover {
+  background-color: var(--accent-dark);
+  border-color: var(--accent-dark);
+  transform: translateY(-3px); /* lifts the button slightly on hover */
+  box-shadow: 0 10px 30px rgba(247, 127, 0, 0.4);
+}
+
+/* Card button: solid primary color */
+.btn-card {
+  background-color: var(--primary);
+  color: var(--text-light);
+  padding: 10px 28px;
+  font-size: 0.88rem;
+  margin-top: 14px;
+}
+
+.btn-card:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 119, 182, 0.35);
+}
+
+/* ============================================================
+   3. HEADER & NAVIGATION BAR
+   Uses FLEXBOX to place the logo on the left and nav links
+   on the right. Flexbox makes it easy to align items in a row.
+
+   FLEXBOX EXPLAINED:
+   - display: flex        → turns the element into a flex container
+   - justify-content      → controls horizontal spacing of children
+   - align-items: center  → vertically centers children in the row
+============================================================ */
+.site-header {
+  position: fixed;          /* stays at the top while you scroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;            /* sits above all other content */
+  background: rgba(0, 7, 36, 0.88);
+  backdrop-filter: blur(12px); /* frosted glass effect */
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* FLEXBOX: logo on left, links on right, vertically centered */
+.navbar {
+  display: flex;
+  justify-content: space-between; /* pushes logo left, links right */
+  align-items: center;            /* centers both vertically in the bar */
+  padding: 0 40px;
+  height: 70px;
+}
+
+/* Logo: icon + text side by side using flex */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.nav-logo .logo-icon {
+  font-size: 1.6rem;
+  color: var(--accent);
+}
+
+.nav-logo .logo-text {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--text-light);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Nav links: horizontal row using flex */
+.nav-links {
+  display: flex;               /* display list items in a row */
+  align-items: center;
+  gap: 32px;                   /* space between each link */
+}
+
+.nav-links a {
+  color: rgba(255,255,255,0.85);
+  font-size: 0.92rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  padding: 6px 2px;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+/* Animated underline that slides in on hover */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;                    /* starts at 0 width */
+  height: 2px;
+  background-color: var(--accent);
+  transition: width 0.3s ease; /* animates to full width on hover */
+}
+
+.nav-links a:hover {
+  color: var(--text-light);
+}
+
+.nav-links a:hover::after {
+  width: 100%;                 /* underline grows to full width on hover */
+}
+
+/* ============================================================
+   4. HERO SECTION
+   Full-screen section with a background image.
+   An overlay darkens the image so text is readable.
+============================================================ */
+.hero-section {
+  position: relative;         /* needed so overlay can be positioned inside */
+  min-height: 100vh;          /* 100% of the viewport height */
+  display: flex;
+  align-items: center;        /* vertically center the content */
+  background-image: url('images/hero_travel.png');
+  background-size: cover;     /* image fills the entire section */
+  background-position: center;
+  background-attachment: fixed; /* parallax-like effect on scroll */
+}
+
+/* Semi-transparent dark overlay on top of the background image */
+.hero-overlay {
+  position: absolute;
+  inset: 0;                   /* shorthand for top/right/bottom/left: 0 */
+  background: linear-gradient(
+    135deg,
+    rgba(0, 7, 36, 0.75) 0%,
+    rgba(0, 60, 100, 0.60) 100%
+  );
+}
+
+/* Hero text content sits above the overlay (z-index) */
+.hero-content {
+  position: relative;
+  z-index: 2;                 /* above the overlay layer */
+  max-width: 800px;
+  padding: 0 40px;
+  color: var(--text-light);
+}
+
+.hero-tagline {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+
+/* <h1> is the most important heading on the page – only one per page */
+.hero-content h1 {
+  font-family: var(--font-heading);
+  font-size: 3.8rem;
+  line-height: 1.15;
+  margin-bottom: 22px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+
+.hero-description {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: rgba(255,255,255,0.87);
+  max-width: 580px;
+  margin-bottom: 38px;
+}
+
+/* ============================================================
+   5. INTRODUCTION SECTION
+============================================================ */
+.intro-section {
+  padding: var(--section-padding);
+  background: var(--bg-page);
+}
+
+.intro-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: 55px 60px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  border-left: 6px solid var(--primary);
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.intro-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.intro-card h2 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--text-dark);
+  margin-bottom: 18px;
+}
+
+.intro-card p {
+  font-size: 1.05rem;
+  color: var(--text-body);
+  line-height: 1.85;
+}
+
+/* ============================================================
+   6. DESTINATIONS SECTION – CSS GRID CARDS
+   CSS GRID EXPLAINED:
+   - display: grid                 → turns container into a grid
+   - grid-template-columns: repeat(auto-fill, minmax(340px, 1fr))
+       → creates as many columns as fit, each at least 340px wide
+       → 1fr means the column takes up an equal share of leftover space
+   - gap: 30px                     → space between grid items (rows & cols)
+   This creates a fully responsive grid that goes from 3 columns
+   on desktop → 2 on tablet → 1 on mobile automatically!
+============================================================ */
+.destinations-section {
+  padding: var(--section-padding);
+  background: linear-gradient(180deg, #e8f4fd 0%, var(--bg-page) 100%);
+}
+
+/* CSS GRID container */
+.destinations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 30px;
+}
+
+/* Individual destination card */
+.dest-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;            /* clips image corners to match card radius */
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  display: flex;
+  flex-direction: column;      /* stacks image on top of text content */
+}
+
+/* Card hover effect: card lifts up */
+.dest-card:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Image wrapper – needed so the number badge can be positioned */
+.card-img-wrap {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+/* IMAGE HOVER EFFECT: image zooms in slightly on card hover */
+.card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;           /* fills the box without stretching */
+  transition: transform 0.5s ease;
+}
+
+.dest-card:hover .card-img-wrap img {
+  transform: scale(1.08);      /* zoom in 8% on hover */
+}
+
+/* Number badge on top-right of card image */
+.card-number {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--accent);
+  color: var(--text-light);
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 4px 11px;
+  border-radius: 30px;
+  letter-spacing: 1px;
+}
+
+/* Card text content area */
+.card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;                     /* takes remaining height – pushes button to bottom */
+}
+
+/* Row of badges (country + landmark) using flexbox */
+.card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.country-badge,
+.landmark-tag {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.country-badge {
+  background-color: #e0f0ff;
+  color: var(--primary);
+}
+
+.landmark-tag {
+  background-color: #fff3e0;
+  color: var(--accent-dark);
+}
+
+/* Card heading */
+.dest-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.55rem;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.card-desc {
+  font-size: 0.91rem;
+  color: var(--text-body);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+
+/* Info block at the bottom of the card */
+.card-info {
+  font-size: 0.83rem;
+  color: var(--text-body);
+  border-top: 1px solid var(--border-light);
+  padding-top: 12px;
+  margin-top: auto;            /* pushes info block to the bottom */
+}
+
+.card-info p {
+  margin-bottom: 5px;
+}
+
+.card-info strong {
+  color: var(--text-dark);
+}
+
+/* ============================================================
+   7. MAP SECTION
+   The map <iframe> is made responsive using a wrapper div.
+============================================================ */
+.map-section {
+  padding: var(--section-padding);
+  background: var(--bg-page);
+}
+
+/* Destination flag-pin cards row above the map */
+.map-pins-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.pin-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-card);
+  border-radius: 30px;
+  padding: 8px 18px;
+  box-shadow: var(--shadow-card);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  border: 2px solid var(--border-light);
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+
+.pin-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+}
+
+.pin-flag {
+  font-size: 1.3rem;
+}
+
+/* Responsive iframe: given a wrapper that scales with the page */
+.map-wrapper {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  border: 3px solid var(--border-light);
+}
+
+/* The iframe itself: full width, fixed height */
+.map-wrapper iframe {
+  display: block;              /* removes small gap below iframe */
+  width: 100%;
+  height: 500px;
+  border: 0;
+}
+
+.map-note {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.92rem;
+  color: var(--text-body);
+}
+
+/* ============================================================
+   8. TRAVEL TIPS SECTION
+   Uses CSS Grid to layout tip cards in a responsive grid.
+============================================================ */
+.tips-section {
+  padding: var(--section-padding);
+  background: linear-gradient(180deg, var(--bg-page) 0%, #e8f4fd 100%);
+}
+
+/* Tips grid: 4 columns on desktop, fewer on smaller screens */
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+/* Individual tip card */
+.tip-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  padding: 30px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-top: 4px solid var(--primary);
+}
+
+.tip-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+}
+
+.tip-icon {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.tip-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  color: var(--text-dark);
+  margin-bottom: 10px;
+}
+
+.tip-card p {
+  font-size: 0.88rem;
+  color: var(--text-body);
+  line-height: 1.7;
+}
+
+/* ============================================================
+   9. TRAVEL CHECKLIST SECTION
+   <ul> and <li> styled to look like a visual checklist.
+============================================================ */
+.checklist-section {
+  padding: var(--section-padding);
+  background: var(--bg-page);
+}
+
+.checklist-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.checklist-header {
+  background: linear-gradient(135deg, var(--primary), #0096c7);
+  color: var(--text-light);
+  padding: 36px 40px;
+  text-align: center;
+}
+
+.checklist-header h2 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.checklist-header p {
+  font-size: 0.98rem;
+  opacity: 0.88;
+}
+
+/* The <ul> checklist grid */
+.checklist {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* two columns */
+  gap: 0;
+  padding: 0;
+}
+
+/* Each <li> checklist item */
+.checklist li {
+  padding: 20px 30px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  border-bottom: 1px solid var(--border-light);
+  border-right: 1px solid var(--border-light);
+  transition: background-color 0.25s ease;
+  cursor: default;
+}
+
+/* Alternate background on even items for a striped look */
+.checklist li:nth-child(even) {
+  background-color: #f7fbff;
+}
+
+.checklist li:hover {
+  background-color: #e0f0ff;
+}
+
+/* ============================================================
+   10. FOOTER
+   CSS Grid used for a 4-column footer layout.
+============================================================ */
+.site-footer {
+  background: linear-gradient(135deg, #000724, #002855);
+  color: rgba(255,255,255,0.80);
+  padding: 70px 0 0;
+}
+
+/* Footer inner grid – 4 equal columns on desktop */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 50px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Footer brand column */
+.footer-brand .footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.footer-brand .logo-icon {
+  font-size: 1.6rem;
+  color: var(--accent);
+}
+
+.footer-brand .logo-text {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--text-light);
+  font-weight: 700;
+}
+
+.footer-brand p {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  margin-bottom: 10px;
+}
+
+.footer-tagline {
+  font-style: italic;
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+
+/* Footer link columns */
+.footer-links h3,
+.footer-dests h3,
+.footer-contact h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--text-light);
+  margin-bottom: 18px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+/* Decorative underline for footer column headings */
+.footer-links h3::after,
+.footer-dests h3::after,
+.footer-contact h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 36px;
+  height: 2px;
+  background-color: var(--accent);
+}
+
+.footer-links ul li,
+.footer-dests ul li {
+  margin-bottom: 10px;
+}
+
+.footer-links a,
+.footer-dests a {
+  font-size: 0.88rem;
+  color: rgba(255,255,255,0.72);
+  transition: color 0.25s ease;
+}
+
+.footer-links a:hover,
+.footer-dests a:hover {
+  color: var(--accent);
+}
+
+.footer-contact p {
+  font-size: 0.88rem;
+  margin-bottom: 12px;
+}
+
+/* Copyright bar at very bottom of footer */
+.footer-bottom {
+  text-align: center;
+  padding: 22px 20px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.45);
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ============================================================
+   11. RESPONSIVE DESIGN – MEDIA QUERIES
+   Media queries change styles based on screen width.
+   Think of them as: "If the screen is smaller than X pixels,
+   use these styles instead."
+
+   Breakpoints used:
+   - Tablet: max-width 900px
+   - Mobile: max-width 600px
+============================================================ */
+
+/* ── TABLET (screens up to 900px wide) ── */
+@media (max-width: 900px) {
+
+  /* Reduce hero heading size */
+  .hero-content h1 {
+    font-size: 2.8rem;
+  }
+
+  /* Footer collapses to 2-column grid */
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  /* Footer brand takes full width on first row */
+  .footer-brand {
+    grid-column: 1 / -1; /* spans all columns */
+  }
+
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .nav-links {
+    gap: 20px;
+  }
+}
+
+/* ── MOBILE (screens up to 600px wide) ── */
+@media (max-width: 600px) {
+
+  /* Navigation: stack logo and links vertically */
+  .site-header {
+    position: relative; /* remove fixed positioning on mobile */
+  }
+
+  .navbar {
+    flex-direction: column; /* stack logo above links */
+    align-items: flex-start;
+    padding: 16px 20px;
+    height: auto;
+    gap: 12px;
+  }
+
+  .nav-links {
+    flex-wrap: wrap;    /* links can wrap to next line */
+    gap: 12px;
+  }
+
+  /* Hero section adjustments */
+  .hero-section {
+    min-height: 85vh;
+    background-attachment: scroll; /* fixed attachment causes issues on mobile */
+  }
+
+  .hero-content {
+    padding: 0 24px;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+  }
+
+  /* Section headings smaller on mobile */
+  .section-header h2 {
+    font-size: 1.8rem;
+  }
+
+  /* Destinations grid: single column */
+  .destinations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Tips grid: single column */
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Checklist: single column */
+  .checklist {
+    grid-template-columns: 1fr;
+  }
+
+  .checklist li {
+    border-right: none;
+  }
+
+  /* Intro card: less padding */
+  .intro-card {
+    padding: 36px 24px;
+  }
+
+  /* Map iframe shorter on mobile */
+  .map-wrapper iframe {
+    height: 300px;
+  }
+
+  /* Footer: single column */
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-brand {
+    grid-column: auto;
+  }
+}
